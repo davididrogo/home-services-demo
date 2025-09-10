@@ -31,9 +31,17 @@
       <version>1.9.24</version>
     </dependency>
   </dependencies>
-  <build><plugins><plugin><groupId>org.springframework.boot</groupId>
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>com.google.cloud.tools</groupId>
+        <artifactId>jib-maven-plugin</artifactId>
+        <version>3.4.3</version>
+      </plugin>
+      <plugin>
+        <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-maven-plugin</artifactId>
-  </plugin>
-  </plugins>
+      </plugin>
+    </plugins>
   </build>
 </project>
