@@ -6,22 +6,14 @@ import com.example.homesvc.repo.ProviderRepo; import org.springframework.stereot
 public class ProviderMatchingService {
   private final ProviderRepo repo;
   private Map<MatchingAlgo, MatchStrategy> strategies = new EnumMap<>(MatchingAlgo.class);
-  public ProviderMatchingService(ProviderRepo repo){
+  public ProviderMatchingService(ProviderRepo repo, List<MatchStrategy> impls){
     this.repo=repo;
+    impls.forEach(s -> strategies.put(s.id(), s));
   }
   /*public record Match(
           List<Long> providerIds,
           String notes){
   }*/
-  private MatchingAlgo parse(String name) {
-    if(name == null) return null;
-    try{
-      return MatchingAlgo.valueOf(name.toUpperCase());
-    }catch (IllegalArgumentException e){
-      return null;
-    }
-  }
-
   public Match suggest(Region region, ServiceType type, Map<String,String> extra){
     var candidates = repo.findByRegionAndSkill(region, type)
             .stream()
@@ -46,5 +38,13 @@ public class ProviderMatchingService {
             .map(Provider::getId)
             .toList();*/
     return new Match(ids, "algo=" + algo + ", count= " + ids.size());
+  }
+  private MatchingAlgo parse(String name) {
+    if(name == null) return null;
+    try{
+      return MatchingAlgo.valueOf(name.toUpperCase());
+    }catch (IllegalArgumentException e){
+      return null;
+    }
   }
 }

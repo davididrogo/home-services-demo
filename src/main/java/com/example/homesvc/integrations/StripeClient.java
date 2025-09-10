@@ -10,10 +10,10 @@ public class StripeClient {
             this.ok = ok;
             this.id = id;
         }
-        public ChargeResponse charge(BigDecimal amount, String currency, Long customerId){
-            boolean approved = amount.compareTo(new BigDecimal("2000")) <= 0;
-            return new ChargeResponse(approved, approved ? "STRIPE_" + customerId :
-                    "STRIPE_DECLINED");
-        }
+    }
+    public ChargeResponse charge(BigDecimal amount, String currency, Long customerId){
+        boolean approved = amount.compareTo(new BigDecimal("2000")) <= 0;
+        return new ChargeResponse(approved, approved ? "STRIPE_" + customerId :
+                "STRIPE_DECLINED");
     }
 }
