@@ -1,0 +1,41 @@
+name: CI
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+    steps:
+      - uses: actions/checkout@v4
+
+      # Java 21 is the Spring Boot 3.x sweet spot; change if you need 17
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 21
+          cache: maven
+
+      # Maven build (auto-skips if no pom.xml)
+      - name: Build & test (Maven)
+        if: hashFiles('**/pom.xml') != ''
+        run: mvn -B verify
+
+      # Gradle build (auto-skips if no build.gradle[.kts])
+      - name: Build & test (Gradle)
+        if: hashFiles('**/build.gradle*') != ''
+        run: ./gradlew build
+
+      - name: Upload test reports
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-reports
+          path: |
+            **/target/surefire-reports/**
+            **/build/test-results/**
