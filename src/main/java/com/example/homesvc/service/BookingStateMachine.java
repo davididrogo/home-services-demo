@@ -14,12 +14,10 @@ import java.util.Map;
 public class BookingStateMachine {
     private final Map<BookingStatus, BookingState> states =
             new EnumMap<>(BookingStatus.class);
-
     public BookingStateMachine(List<BookingState> impls){
         for(var s : impls)
             states.put(s.status(), s);
     }
-
     public void apply(Booking booking, BookingEvent event){
         var current = states.get(booking.getStatus());
         if(current == null) throw new IllegalStateException("No BookingState for " +

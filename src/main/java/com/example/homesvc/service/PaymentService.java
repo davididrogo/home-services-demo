@@ -9,7 +9,6 @@ import java.util.Map;
 import java.util.Random;
 @Service
 public class PaymentService {
-
   private final Map<PaymentMethod, PaymentStrategy> strategies =
           new EnumMap<>(PaymentMethod.class);
   public PaymentService(List<PaymentStrategy> impls){
