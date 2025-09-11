@@ -8,8 +8,14 @@ import java.util.concurrent.atomic.AtomicLong;
 @RestController
 @RequestMapping("/api/admin")
 public class AdminController {
-  private final UserRepo users; private final ProviderRepo providers; private final BookingRepo bookings;
-  public AdminController(UserRepo users, ProviderRepo providers, BookingRepo bookings){ this.users=users; this.providers=providers; this.bookings=bookings; }
+  private final UserRepo users;
+  private final ProviderRepo providers;
+  private final BookingRepo bookings;
+  public AdminController(UserRepo users, ProviderRepo providers, BookingRepo bookings){
+    this.users=users;
+    this.providers=providers;
+    this.bookings=bookings;
+  }
   @PostMapping("/seed")
   public String seed(){
     var uid = new AtomicLong(1);

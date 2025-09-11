@@ -1,15 +1,18 @@
 package com.example.homesvc.service;
 import com.example.homesvc.domain.*;
 import com.example.homesvc.patterns.strategy.match.MatchStrategy;
-import com.example.homesvc.repo.ProviderRepo; import org.springframework.stereotype.Service; import java.util.*; import java.util.stream.Collectors;
+import com.example.homesvc.repo.ProviderRepo;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service; import java.util.*; import java.util.stream.Collectors;
+@RequiredArgsConstructor
 @Service
 public class ProviderMatchingService {
   private final ProviderRepo repo;
-  private Map<MatchingAlgo, MatchStrategy> strategies = new EnumMap<>(MatchingAlgo.class);
-  public ProviderMatchingService(ProviderRepo repo, List<MatchStrategy> impls){
+  private /*new*/final Map<MatchingAlgo, MatchStrategy> strategies;// = new EnumMap<>(MatchingAlgo.class);
+  /*public ProviderMatchingService(ProviderRepo repo, List<MatchStrategy> impls){
     this.repo=repo;
     impls.forEach(s -> strategies.put(s.id(), s));
-  }
+  }*/
   /*public record Match(
           List<Long> providerIds,
           String notes){
