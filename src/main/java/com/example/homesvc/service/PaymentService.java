@@ -1,12 +1,13 @@
 package com.example.homesvc.service;
-import com.example.homesvc.domain.PaymentMethod;
-import com.example.homesvc.domain.PaymentResult;
+import com.example.homesvc.domain.enums.PaymentMethod;
+import com.example.homesvc.domain.records.PaymentResult;
 import com.example.homesvc.patterns.strategy.PaymentStrategy;
-import org.springframework.stereotype.Service; import java.math.BigDecimal;
+import org.springframework.stereotype.Service;
+import java.math.BigDecimal;
 import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Random;
+
 @Service
 public class PaymentService {
   private final Map<PaymentMethod, PaymentStrategy> strategies =

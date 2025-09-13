@@ -1,6 +1,6 @@
 package com.example.homesvc.adapters.payments;
 
-import com.example.homesvc.domain.Result;
+import com.example.homesvc.domain.records.Result;
 import com.example.homesvc.integrations.StripeClient;
 import com.example.homesvc.ports.PaymentGateway;
 import org.springframework.stereotype.Component;

@@ -1,21 +1,23 @@
 package com.example.homesvc.service;
-import com.example.homesvc.domain.*;
+
+import com.example.homesvc.domain.enums.Region;
+import com.example.homesvc.domain.enums.ServiceType;
+import com.example.homesvc.domain.enums.UserTier;
+import com.example.homesvc.domain.mongo.Acc;
+import com.example.homesvc.domain.records.Calc;
+import com.example.homesvc.domain.records.Input;
 import com.example.homesvc.patterns.strategy.cor.PriceStep;
-import org.springframework.stereotype.Service; import java.math.*; import java.time.LocalDateTime;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
+import java.math.*;
+import java.time.LocalDateTime;
 import java.util.List;
 
+@RequiredArgsConstructor
 @Service
 public class PricingService {
   private final RuleEngineService rules;
   private final List<PriceStep> steps;
-  public PricingService(RuleEngineService rules, List<PriceStep> steps){
-    this.rules=rules;
-    this.steps = steps;
-  }
-  /*public record Calc(BigDecimal estimate,
-                     BigDecimal taxes,
-                     BigDecimal surcharges,
-                     String notes){}*/
   public Calc estimate(Region region,
                        ServiceType type,
                        boolean urgent,

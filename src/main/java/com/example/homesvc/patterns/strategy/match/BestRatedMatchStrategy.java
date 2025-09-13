@@ -1,7 +1,7 @@
 package com.example.homesvc.patterns.strategy.match;
 
-import com.example.homesvc.domain.MatchingAlgo;
-import com.example.homesvc.domain.Provider;
+import com.example.homesvc.domain.enums.MatchingAlgo;
+import com.example.homesvc.domain.mongo.Provider;
 import org.springframework.stereotype.Component;
 
 import java.util.Comparator;
@@ -17,8 +17,9 @@ public class BestRatedMatchStrategy implements MatchStrategy{
     @Override
     public List<Long> rank(List<Provider> candidates) {
         return candidates.stream()
-                .sorted(Comparator.comparing(Provider::getReputation).reversed())
-                .map(Provider::getId)
+                .sorted(Comparator.comparingInt((Provider p) -> p.reputation)
+                        .reversed())
+                .map(p -> p.id)
                 .toList();
     }
 }
