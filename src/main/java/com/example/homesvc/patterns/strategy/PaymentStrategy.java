@@ -1,8 +1,7 @@
 package com.example.homesvc.patterns.strategy;
 
-import com.example.homesvc.domain.PaymentMethod;
-import com.example.homesvc.domain.PaymentResult;
-import com.example.homesvc.service.PaymentService;
+import com.example.homesvc.domain.enums.PaymentMethod;
+import com.example.homesvc.domain.records.PaymentResult;
 
 import java.math.BigDecimal;
 

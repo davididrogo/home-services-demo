@@ -1,9 +1,16 @@
 package com.example.homesvc.service;
-import com.example.homesvc.domain.*; import org.springframework.stereotype.Service; import java.math.BigDecimal; import java.util.HashMap; import java.util.Map;
+import com.example.homesvc.domain.enums.Region;
+import com.example.homesvc.domain.enums.ServiceType;
+import com.example.homesvc.domain.enums.UserTier;
+import com.example.homesvc.domain.records.PricingRules;
+import org.springframework.stereotype.Service;
+import java.math.BigDecimal;
+import java.util.HashMap;
+import java.util.Map;
 @Service
 public class RuleEngineService {
   /*public record PricingRules(BigDecimal baseRate,BigDecimal taxPct,BigDecimal surgePct,BigDecimal urgentFee){}*/
-  private final Map<String,PricingRules> rules = new HashMap<>();
+  private final Map<String, PricingRules> rules = new HashMap<>();
   public RuleEngineService(){
     put(Region.NORTH, ServiceType.PLUMBING,80,0.12,0.10,25);
     put(Region.NORTH, ServiceType.ELECTRICAL,90,0.12,0.05,30);

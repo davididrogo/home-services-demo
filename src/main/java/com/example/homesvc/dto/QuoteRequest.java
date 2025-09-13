@@ -1,5 +1,5 @@
 package com.example.homesvc.dto;
-import com.example.homesvc.domain.Region; import com.example.homesvc.domain.ServiceType; import com.example.homesvc.domain.UserTier;
+import com.example.homesvc.domain.enums.Region; import com.example.homesvc.domain.enums.ServiceType; import com.example.homesvc.domain.enums.UserTier;
 import jakarta.validation.constraints.Future; import jakarta.validation.constraints.NotNull;
 import java.time.LocalDateTime; import java.util.Map;
 public class QuoteRequest {

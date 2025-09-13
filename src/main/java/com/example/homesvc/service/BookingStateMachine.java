@@ -1,8 +1,8 @@
 package com.example.homesvc.service;
 
-import com.example.homesvc.domain.Booking;
-import com.example.homesvc.domain.BookingEvent;
-import com.example.homesvc.domain.BookingStatus;
+import com.example.homesvc.domain.enums.BookingEvent;
+import com.example.homesvc.domain.enums.BookingStatus;
+import com.example.homesvc.domain.mongo.Booking;
 import com.example.homesvc.service.state.BookingState;
 import org.springframework.stereotype.Component;
 
@@ -19,9 +19,9 @@ public class BookingStateMachine {
             states.put(s.status(), s);
     }
     public void apply(Booking booking, BookingEvent event){
-        var current = states.get(booking.getStatus());
+        var current = states.get(booking.status);
         if(current == null) throw new IllegalStateException("No BookingState for " +
-                booking.getStatus());
+                booking.status);
         var next = current.next(event);
         booking.setStatus(next);
     }
