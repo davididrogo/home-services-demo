@@ -1,12 +1,16 @@
+# build outputs
 target/
-*.class
-.idea/
-*.iml
-.gradle/
 build/
 out/
+.gradle/
+
+# IDE
+.idea/
+*.iml
+
+# logs & OS cruft
 *.log
 .DS_Store
-.env/target/
-/.idea/
-/*.iml/
+
+# env files (optional)
+.env
