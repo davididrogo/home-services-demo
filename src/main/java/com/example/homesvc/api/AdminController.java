@@ -1,24 +1,34 @@
 package com.example.homesvc.api;
-import com.example.homesvc.domain.*;
+
+import com.example.homesvc.domain.enums.Region;
+import com.example.homesvc.domain.enums.ServiceType;
+import com.example.homesvc.domain.enums.UserTier;
+import com.example.homesvc.domain.mongo.Booking;
+import com.example.homesvc.domain.mongo.Provider;
+import com.example.homesvc.domain.mongo.User;
+import com.example.homesvc.infra.mongo.SequenceService;
 import com.example.homesvc.repo.*;
 import org.springframework.web.bind.annotation.*;
 import java.math.BigDecimal;
 import java.util.*;
-import java.util.concurrent.atomic.AtomicLong;
+
 @RestController
 @RequestMapping("/api/admin")
 public class AdminController {
   private final UserRepo users;
   private final ProviderRepo providers;
   private final BookingRepo bookings;
-  public AdminController(UserRepo users, ProviderRepo providers, BookingRepo bookings){
+  private final SequenceService seq;
+  public AdminController(UserRepo users, ProviderRepo providers,
+                         BookingRepo bookings, SequenceService seq){
     this.users=users;
     this.providers=providers;
     this.bookings=bookings;
+    this.seq = seq;
   }
   @PostMapping("/seed")
   public String seed(){
-    var uid = new AtomicLong(1);
+    /*var uid = new AtomicLong(1);
     users.save(new User(uid.get(), "Alice", UserTier.REGULAR, Region.NORTH));
     users.save(new User(uid.incrementAndGet(), "Bob", UserTier.GOLD, Region.SOUTH));
     users.save(new User(uid.incrementAndGet(), "Carol", UserTier.PLATINUM, Region.EAST));
@@ -28,6 +38,21 @@ public class AdminController {
     providers.save(new Provider(13L, "FixItAll", Region.SOUTH, java.util.EnumSet.of(ServiceType.PLUMBING, ServiceType.APPLIANCE), new BigDecimal("60"), false, 60));
     providers.save(new Provider(14L, "ApplianceGurus", Region.WEST, java.util.EnumSet.of(ServiceType.APPLIANCE), new BigDecimal("65"), true, 75));
     providers.save(new Provider(15L, "WireWizards", Region.NORTH, java.util.EnumSet.of(ServiceType.ELECTRICAL), new BigDecimal("78"), true, 88));
+    return "seeded";*/
+    long u1 = seq.next("user");
+    users.save(new User(u1, "alice", UserTier.REGULAR));
+    long u2 = seq.next("user");
+    users.save(new User(u2, "bob@example.com", UserTier.GOLD));
+
+    long p1 = seq.next("provider");
+    Provider a = new Provider();
+    a.id = p1;
+    a.region = Region.NORTH;
+    a.licensed = true;
+    a.hourlyRate = new BigDecimal("70");
+    a.reputation = 95;
+    a.skills = java.util.EnumSet.of(ServiceType.PLUMBING, ServiceType.HVAC);
+
     return "seeded";
   }
   @GetMapping("/users")

@@ -1,6 +1,6 @@
 package com.example.homesvc.ports;
 
-import com.example.homesvc.domain.Result;
+import com.example.homesvc.domain.records.Result;
 
 import java.math.BigDecimal;
 import java.util.Currency;

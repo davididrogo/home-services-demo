@@ -1,13 +1,16 @@
 package com.example.homesvc.repo;
-import com.example.homesvc.domain.Booking;
+import com.example.homesvc.domain.mongo.Booking;
+import com.example.homesvc.ports.BookingStore;
+import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Repository;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 @Repository
-public class InMemoryBookingRepo implements BookingRepo {
-  private final Map<Long,Booking> store = new ConcurrentHashMap<>();
+@Profile("mem")
+public class InMemoryBookingRepo implements BookingStore {
+  private final Map<Long, Booking> store = new ConcurrentHashMap<>();
   public void save(Booking b){
-    store.put(b.getId(), b);
+    store.put(b.id, b);
   }
   public Optional<Booking> findById(Long id){
     return Optional.ofNullable(store.get(id));

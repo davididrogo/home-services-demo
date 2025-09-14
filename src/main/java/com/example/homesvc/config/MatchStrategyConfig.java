@@ -1,11 +1,9 @@
 package com.example.homesvc.config;
 
-import com.example.homesvc.decorators.RetryingPaymentGateway;
-import com.example.homesvc.domain.MatchingAlgo;
+import com.example.homesvc.domain.enums.MatchingAlgo;
 import com.example.homesvc.patterns.strategy.match.MatchStrategy;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.boot.autoconfigure.web.servlet.WebMvcProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 

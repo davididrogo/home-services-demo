@@ -1,10 +1,27 @@
 package com.example.homesvc.service;
+
 import com.example.homesvc.af.ComponentsFactory;
-import com.example.homesvc.domain.*; import com.example.homesvc.dto.*; import com.example.homesvc.repo.*; import org.springframework.stereotype.Service;
-import java.math.BigDecimal; import java.time.LocalDateTime;
+import com.example.homesvc.domain.enums.BookingEvent;
+import com.example.homesvc.domain.enums.BookingStatus;
+import com.example.homesvc.domain.enums.UserTier;
+import com.example.homesvc.domain.mongo.Booking;
+import com.example.homesvc.domain.records.Result;
+import com.example.homesvc.dto.*;
+import com.example.homesvc.infra.mongo.SequenceService;
+import com.example.homesvc.repo.*;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
+
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.Map;
-import java.util.Optional; import java.util.concurrent.atomic.AtomicLong;
+import java.util.Optional;
+
+import static org.springframework.http.HttpStatus.NOT_FOUND;
+
 @Service
+@RequiredArgsConstructor
 public class BookingOrchestrator {
   private final UserRepo users;
   private final ProviderRepo providers;
@@ -13,31 +30,20 @@ public class BookingOrchestrator {
   private final ProviderMatchingService matching;
   private final PaymentService payments;
   private final NotificationService notify;
-  private final AtomicLong seq = new AtomicLong(1000);
+//  private final AtomicLong seq = new AtomicLong(1000);
   private final BookingStateMachine stateMachine;
   private final ComponentsFactory factory;
-  public BookingOrchestrator(UserRepo users, ProviderRepo providers, BookingRepo bookings, PricingService pricing,
-                             ProviderMatchingService matching, PaymentService payments,
-                             NotificationService notify, BookingStateMachine stateMachine,
-                             ComponentsFactory factory){
-    this.users=users;
-    this.providers=providers;
-    this.bookings=bookings;
-    this.pricing=pricing;
-    this.matching=matching;
-    this.payments=payments;
-    this.notify=notify;
-    this.stateMachine = stateMachine;
-    this.factory = factory;
-  }
+  private final SequenceService sequenceService;
+
   public QuoteResponse quote(QuoteRequest req){
     var user = users.findById(req.userId)
             .orElseThrow();
-    UserTier tier = req.tierOverride!=null? req.tierOverride : user.getTier();
+    UserTier tier = req.tierOverride != null ? req.tierOverride : user.tier;
     var calc = pricing.estimate(
             req.region,
             req.serviceType,
-            req.urgent, tier,
+            req.urgent,
+            tier,
             req.voucherCode,
             req.desiredAt);
 
@@ -56,10 +62,11 @@ public class BookingOrchestrator {
             LocalDateTime.now());
   }
   public BookingView create(CreateBookingRequest bookReq){
+
     var user = users.findById(bookReq.userId).orElseThrow();
 
     var calc = pricing
-            .estimate(bookReq.region, bookReq.serviceType, bookReq.highPriority, user.getTier(),
+            .estimate(bookReq.region, bookReq.serviceType, bookReq.highPriority, user.tier,
             bookReq.voucherCode, bookReq.scheduledAt);
 
     BigDecimal amount = calc.estimate();
@@ -74,25 +81,27 @@ public class BookingOrchestrator {
       providerId = match.providerIds().isEmpty() ? null : match.providerIds().get(0);
     }
     if (providerId == null){
-      throw new IllegalStateException("No providers available");
+      throw new ResponseStatusException(NOT_FOUND,
+              "No providers available for %s in %s".formatted(bookReq.serviceType, bookReq.region));
     }
     //var payOld = payments.charge(bookReq.paymentMethod, amount);
     Result pay = factory.paymentGateway().capture(amount, factory.currency(),
-            user.getId());
-
+            user.id);
     //BookingStatus status =
         //    pay.success()? BookingStatus.CONFIRMED : BookingStatus.FAILED_PAYMENT;
     //NEW: Always start as QUOTED; state machine decides the next status.
-    var booking = new Booking(seq.incrementAndGet(),
-            user.getId(),
-            providerId,
-            bookReq.serviceType,
-            bookReq.region,
-            bookReq.scheduledAt,
-            BookingStatus.QUOTED,//status,
-            amount,
-            null,//pay.success()? amount : null,
-            "init");//pay.code());
+    Long id = sequenceService.next("booking");
+    var booking = new Booking();
+            booking.id = id;/*seq.incrementAndGet()*/
+            booking.userId = user.id;
+            booking.providerId = providerId;
+            booking.serviceType = bookReq.serviceType;
+            booking.region = bookReq.region;
+            booking.scheduledAt = bookReq.scheduledAt;
+            booking.status = BookingStatus.QUOTED;
+            booking.quotedPrice = amount;
+            booking.finalPrice = null;
+            booking.notes = "init";//pay.code());
     //bookings.save(booking);
 //NEW: Transition based on payment result
     if(pay.success()){
@@ -100,8 +109,8 @@ public class BookingOrchestrator {
       booking.setFinalPrice(amount);
       booking.setNotes(pay.code());
 
-      notify.sendBookingConfirmation(user.getId(), booking.getId(), providerId);
-    } /*New*/ else{
+      notify.sendBookingConfirmation(user.id, booking.getId(), providerId);
+    } else{
       stateMachine.apply(booking, BookingEvent.PAYMENT_FAILED);
       booking.setNotes(pay.code());
     }

@@ -1,8 +1,7 @@
 package com.example.homesvc.service.state;
 
-import com.example.homesvc.domain.BookingEvent;
-import com.example.homesvc.domain.BookingStatus;
-import org.hibernate.validator.constraints.CodePointLength;
+import com.example.homesvc.domain.enums.BookingEvent;
+import com.example.homesvc.domain.enums.BookingStatus;
 import org.springframework.stereotype.Component;
 
 @Component

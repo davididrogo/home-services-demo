@@ -1,6 +1,6 @@
 package com.example.homesvc.decorators;
 
-import com.example.homesvc.domain.Result;
+import com.example.homesvc.domain.records.Result;
 import com.example.homesvc.ports.PaymentGateway;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

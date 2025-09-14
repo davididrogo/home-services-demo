@@ -1,7 +1,10 @@
 package com.example.homesvc.repo;
-import com.example.homesvc.domain.Booking; import java.util.*;
-public interface BookingRepo {
-    void save(Booking b);
-    Optional<Booking> findById(Long id);
-    java.util.List<Booking> findAll();
+
+import com.example.homesvc.domain.mongo.Booking;
+import org.springframework.data.mongodb.repository.MongoRepository;
+import org.springframework.stereotype.Repository;
+
+@Repository
+public interface BookingRepo extends MongoRepository<Booking, Long> {
+
 }
