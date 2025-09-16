@@ -15,7 +15,7 @@ public class BestRatedMatchStrategy implements MatchStrategy{
     }
 
     @Override
-    public List<Long> rank(List<Provider> candidates) {
+    public List<String> rank(List<Provider> candidates) {
         return candidates.stream()
                 .sorted(Comparator.comparingInt((Provider p) -> p.reputation)
                         .reversed())

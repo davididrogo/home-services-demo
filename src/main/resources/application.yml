@@ -1,9 +1,11 @@
-﻿spring:
+﻿app:
+  seed: false
+---
+spring:
   application:
     name: home-services-demo
   profiles:
     default: dev
-
 server:
   port: ${PORT:8081}
 
@@ -15,7 +17,8 @@ spring:
   data:
     mongodb:
       uri: ${SPRING_DATA_MONGODB_URI:mongodb://localhost:27017/homesvc}
-
+app:
+  seed: true
 ---
 spring:
   config:
@@ -24,3 +27,5 @@ spring:
   data:
     mongodb:
       uri: ${SPRING_DATA_MONGODB_URI}
+app:
+  seed: false

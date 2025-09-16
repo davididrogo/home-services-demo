@@ -20,7 +20,7 @@ import java.util.Set;
 @Setter
 public class Provider {
     @Id
-    public Long id;
+    public String id;
     private String name;
     public Region region;
     public Set<ServiceType> skills = EnumSet.noneOf(ServiceType.class);
