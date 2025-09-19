@@ -4,7 +4,7 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class NotificationService {
-    public void sendBookingConfirmation(Long userId, Long bookingId, Long providerId){
-        System.out.printf("[NOTIFY] user=%d booking=%d provider=%d%n", userId, bookingId, providerId);
+    public void sendBookingConfirmation(Long userId, String bookingId, String providerId){
+        System.out.printf("[NOTIFY] user=%d booking=%s provider=%s%n", userId, bookingId, providerId);
     }
 }

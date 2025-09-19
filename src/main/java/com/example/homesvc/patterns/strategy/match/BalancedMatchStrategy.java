@@ -15,7 +15,7 @@ public class BalancedMatchStrategy implements MatchStrategy{
     }
 
     @Override
-    public List<Long> rank(List<Provider> candidates) {
+    public List<String> rank(List<Provider> candidates) {
         return candidates.stream()
                 .sorted(Comparator.comparing(Provider::getReputation)
                         .reversed()

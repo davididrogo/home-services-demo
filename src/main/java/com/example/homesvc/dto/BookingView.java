@@ -7,7 +7,7 @@ import java.math.BigDecimal; import java.time.LocalDateTime;
 public class BookingView {
   public Long id;
   public Long userId;
-  public Long providerId;
+  public String providerId;
   public ServiceType serviceType;
   public Region region;
   public LocalDateTime scheduledAt;

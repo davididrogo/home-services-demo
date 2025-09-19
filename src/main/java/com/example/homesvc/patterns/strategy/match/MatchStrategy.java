@@ -7,5 +7,5 @@ import java.util.List;
 
 public interface MatchStrategy {
     MatchingAlgo id();
-    List<Long> rank(List<Provider> candidates);
+    List<String> rank(List<Provider> candidates);
 }
