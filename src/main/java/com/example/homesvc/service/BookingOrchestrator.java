@@ -71,7 +71,7 @@ public class BookingOrchestrator {
 
     BigDecimal amount = calc.estimate();
 
-    Long providerId = bookReq.preferredProviderId;
+    String providerId = bookReq.preferredProviderId;
 
     if(providerId == null){
       var match = matching.suggest(bookReq.region,
@@ -92,7 +92,7 @@ public class BookingOrchestrator {
     //NEW: Always start as QUOTED; state machine decides the next status.
     Long id = sequenceService.next("booking");
     var booking = new Booking();
-            booking.id = id;/*seq.incrementAndGet()*/
+            booking.setNumber(id);/*seq.incrementAndGet()*/
             booking.userId = user.id;
             booking.providerId = providerId;
             booking.serviceType = bookReq.serviceType;
@@ -118,23 +118,23 @@ public class BookingOrchestrator {
     bookings.save(booking);
 
     var v = new BookingView();
-    v.id=booking.getId();
-    v.userId=booking.getUserId();
-    v.providerId=booking.getProviderId();
-    v.serviceType=booking.getServiceType();
-    v.region=booking.getRegion();
-    v.scheduledAt=booking.getScheduledAt();
-    v.status=booking.getStatus();
-    v.quotedPrice=booking.getQuotedPrice();
-    v.finalPrice=booking.getFinalPrice();
-    v.notes=booking.getNotes();
+    v.id = booking.getNumber();
+    v.userId = booking.getUserId();
+    v.providerId = booking.getProviderId();
+    v.serviceType = booking.getServiceType();
+    v.region = booking.getRegion();
+    v.scheduledAt = booking.getScheduledAt();
+    v.status = booking.getStatus();
+    v.quotedPrice = booking.getQuotedPrice();
+    v.finalPrice = booking.getFinalPrice();
+    v.notes = booking.getNotes();
     return v;
   }
   public Optional<BookingView> get(Long id){
     return bookings.findById(id)
             .map(b -> {
               var v = new BookingView();
-              v.id=b.getId();
+              v.id = b.getNumber();
               v.userId=b.getUserId();
               v.providerId=b.getProviderId();
               v.serviceType=b.getServiceType();
@@ -168,7 +168,7 @@ public class BookingOrchestrator {
   }
   private BookingView toView(Booking b){
     var v = new BookingView();
-    v.id = b.getId();
+    v.id = b.getNumber();
     v.userId = b.getUserId();
     v.providerId = b.getProviderId();
     v.serviceType = b.getServiceType(); v.region = b.getRegion();

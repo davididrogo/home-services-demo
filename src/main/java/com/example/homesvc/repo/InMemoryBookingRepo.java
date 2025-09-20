@@ -8,7 +8,7 @@ import java.util.concurrent.ConcurrentHashMap;
 @Repository
 @Profile("mem")
 public class InMemoryBookingRepo implements BookingStore {
-  private final Map<Long, Booking> store = new ConcurrentHashMap<>();
+  private final Map<String, Booking> store = new ConcurrentHashMap<>();
   public void save(Booking b){
     store.put(b.id, b);
   }

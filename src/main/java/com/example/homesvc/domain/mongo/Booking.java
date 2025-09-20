@@ -20,11 +20,13 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 public class Booking {
     @Id
-    public Long id;
+    public String id;
+    @Indexed(unique = true)
+    private Long number;
     @Indexed
     public Long userId;
     @Indexed
-    public Long providerId;
+    public String providerId;
     public ServiceType serviceType;
     public Region region;
     public LocalDateTime scheduledAt;

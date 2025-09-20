@@ -1,5 +1,6 @@
 package com.example.homesvc.api;
 
+import com.example.homesvc.config.BookingStateMachineConfig;
 import com.example.homesvc.domain.enums.Region;
 import com.example.homesvc.domain.enums.ServiceType;
 import com.example.homesvc.domain.enums.UserTier;
@@ -8,6 +9,8 @@ import com.example.homesvc.domain.mongo.Provider;
 import com.example.homesvc.domain.mongo.User;
 import com.example.homesvc.infra.mongo.SequenceService;
 import com.example.homesvc.repo.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.*;
 import java.math.BigDecimal;
 import java.util.*;
@@ -19,6 +22,7 @@ public class AdminController {
   private final ProviderRepo providers;
   private final BookingRepo bookings;
   private final SequenceService seq;
+  private static final Logger log = LoggerFactory.getLogger(AdminController.class);
   public AdminController(UserRepo users, ProviderRepo providers,
                          BookingRepo bookings, SequenceService seq){
     this.users=users;
@@ -46,13 +50,15 @@ public class AdminController {
 
     long p1 = seq.next("provider");
     Provider a = new Provider();
-    a.id = p1;
+    //a.id = p1;
+    a.setName("PlumbMaster");
     a.region = Region.NORTH;
     a.licensed = true;
     a.hourlyRate = new BigDecimal("70");
     a.reputation = 95;
-    a.skills = java.util.EnumSet.of(ServiceType.PLUMBING, ServiceType.HVAC);
-
+    a.skills = EnumSet.of(ServiceType.PLUMBING, ServiceType.HVAC);
+    providers.save(a);
+    log.info("provider created : " + a.id);
     return "seeded";
   }
   @GetMapping("/users")

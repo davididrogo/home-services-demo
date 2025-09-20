@@ -4,7 +4,7 @@ import jakarta.validation.constraints.Future; import jakarta.validation.constrai
 import java.time.LocalDateTime;
 public class CreateBookingRequest {
   @NotNull public Long userId;
-  public Long preferredProviderId;
+  public String preferredProviderId;
   @NotNull public ServiceType serviceType;
   @NotNull public Region region;
   @NotNull @Future public LocalDateTime scheduledAt;
