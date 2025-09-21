@@ -15,7 +15,7 @@ public class CheapMatchStrategy implements MatchStrategy{
     }
 
     @Override
-    public List<String> rank(List<Provider> candidates) {
+    public List<String> rankCandidates(List<Provider> candidates) {
         return candidates.stream()
                 .sorted(Comparator.comparing(Provider::getHourlyRate))
         .map(Provider::getId)

@@ -24,7 +24,7 @@ public class Booking {
     @Indexed(unique = true)
     private Long number;
     @Indexed
-    public Long userId;
+    public String userId;
     @Indexed
     public String providerId;
     public ServiceType serviceType;

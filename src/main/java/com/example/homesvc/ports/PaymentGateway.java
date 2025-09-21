@@ -9,5 +9,5 @@ public interface PaymentGateway {
    /* record Result(
             boolean success,
             String code){};*/
-    Result capture(BigDecimal amount, Currency currency, Long userId);
+    Result capture(BigDecimal amount, Currency currency, String userId);
 }

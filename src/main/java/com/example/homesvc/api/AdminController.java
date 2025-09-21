@@ -43,10 +43,6 @@ public class AdminController {
     providers.save(new Provider(14L, "ApplianceGurus", Region.WEST, java.util.EnumSet.of(ServiceType.APPLIANCE), new BigDecimal("65"), true, 75));
     providers.save(new Provider(15L, "WireWizards", Region.NORTH, java.util.EnumSet.of(ServiceType.ELECTRICAL), new BigDecimal("78"), true, 88));
     return "seeded";*/
-    long u1 = seq.next("user");
-    users.save(new User(u1, "alice", UserTier.REGULAR));
-    long u2 = seq.next("user");
-    users.save(new User(u2, "bob@example.com", UserTier.GOLD));
 
     long p1 = seq.next("provider");
     Provider a = new Provider();

@@ -15,7 +15,7 @@ import java.util.Map;
 public class AdyenPaymentAdapter implements PaymentGateway {
     private final AdyenClient client = new AdyenClient();
     @Override
-    public Result capture(BigDecimal amount, Currency currency, Long userId) {
+    public Result capture(BigDecimal amount, Currency currency, String userId) {
         var auth = client.authorize(Map.of("amount", amount, "currency", currency
                 .getCurrencyCode(), "userId", userId));
         boolean ok = "AUTHORIZED".equals(auth.status);

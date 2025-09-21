@@ -6,7 +6,7 @@ import com.example.homesvc.domain.enums.ServiceType;
 import java.math.BigDecimal; import java.time.LocalDateTime;
 public class BookingView {
   public Long id;
-  public Long userId;
+  public String userId;
   public String providerId;
   public ServiceType serviceType;
   public Region region;

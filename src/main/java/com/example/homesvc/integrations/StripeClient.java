@@ -11,7 +11,7 @@ public class StripeClient {
             this.id = id;
         }
     }
-    public ChargeResponse charge(BigDecimal amount, String currency, Long customerId){
+    public ChargeResponse charge(BigDecimal amount, String currency, String customerId){
         boolean approved = amount.compareTo(new BigDecimal("2000")) <= 0;
         return new ChargeResponse(approved, approved ? "STRIPE_" + customerId :
                 "STRIPE_DECLINED");

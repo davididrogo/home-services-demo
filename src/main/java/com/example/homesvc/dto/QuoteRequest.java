@@ -3,7 +3,7 @@ import com.example.homesvc.domain.enums.Region; import com.example.homesvc.domai
 import jakarta.validation.constraints.Future; import jakarta.validation.constraints.NotNull;
 import java.time.LocalDateTime; import java.util.Map;
 public class QuoteRequest {
-  @NotNull public Long userId;
+  @NotNull public String userId;
   @NotNull public ServiceType serviceType;
   @NotNull public Region region;
   @NotNull @Future public LocalDateTime desiredAt;

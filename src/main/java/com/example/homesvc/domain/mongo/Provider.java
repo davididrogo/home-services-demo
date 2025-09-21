@@ -2,9 +2,7 @@ package com.example.homesvc.domain.mongo;
 
 import com.example.homesvc.domain.enums.Region;
 import com.example.homesvc.domain.enums.ServiceType;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.index.CompoundIndex;
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -16,8 +14,8 @@ import java.util.Set;
 @Document("providers")
 @CompoundIndex(name = "region_skill", def = "{'region': 1, 'skills': 1}")
 @AllArgsConstructor
-@Getter
-@Setter
+@NoArgsConstructor
+@Data
 public class Provider {
     @Id
     public String id;
@@ -27,5 +25,4 @@ public class Provider {
     public BigDecimal hourlyRate;
     public boolean licensed;
     public int reputation;
-    public Provider(){}
 }
