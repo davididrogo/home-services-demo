@@ -15,7 +15,7 @@ public class LoggingPaymentGateway implements PaymentGateway {
         this.delegate = delegate;
     }
     @Override
-    public Result capture(BigDecimal amount, Currency currency, Long userId) {
+    public Result capture(BigDecimal amount, Currency currency, String userId) {
         long t0 = System.nanoTime();
         try{
             Result r = delegate.capture(amount, currency, userId);

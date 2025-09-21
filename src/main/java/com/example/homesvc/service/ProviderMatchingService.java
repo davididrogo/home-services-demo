@@ -15,7 +15,7 @@ import java.util.stream.Collectors;
 public class ProviderMatchingService {
   private final ProviderRepo repo;
   private final Map<MatchingAlgo, MatchStrategy> strategies;
-  public Match suggest(Region region, ServiceType type, Map<String,String> extra){
+  public Match suggestProviders(Region region, ServiceType type, Map<String,String> extra){
     var candidates = repo.findByRegionAndSkillsContainsAndLicensedTrue(region, type)
             .stream()
             //.filter(Provider::licensed)
@@ -25,7 +25,7 @@ public class ProviderMatchingService {
     //String algo = extra != null ? extra.get("algo") : null;
     var algo = parse(extra != null ? extra.get("algo") : null);
     var strat = strategies.getOrDefault(algo, strategies.get(MatchingAlgo.CHEAPEST));
-    var ids = strat.rank(candidates);
+    var ids = strat.rankCandidates(candidates);
 
     /*switch (algo.toUpperCase()){
       case "CHEAPEST" -> candidates.sort(Comparator.comparing(p -> p.getHourlyRate()));

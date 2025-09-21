@@ -38,7 +38,7 @@ public class BookingOrchestrator {
   public QuoteResponse quote(QuoteRequest req){
     var user = users.findById(req.userId)
             .orElseThrow();
-    UserTier tier = req.tierOverride != null ? req.tierOverride : user.tier;
+    UserTier tier = req.tierOverride != null ? req.tierOverride : user.getTier();
     var calc = pricing.estimate(
             req.region,
             req.serviceType,
@@ -47,7 +47,7 @@ public class BookingOrchestrator {
             req.voucherCode,
             req.desiredAt);
 
-    var match = matching.suggest(
+    var match = matching.suggestProviders(
             req.region,
             req.serviceType,
             req.extra);
@@ -66,7 +66,7 @@ public class BookingOrchestrator {
     var user = users.findById(bookReq.userId).orElseThrow();
 
     var calc = pricing
-            .estimate(bookReq.region, bookReq.serviceType, bookReq.highPriority, user.tier,
+            .estimate(bookReq.region, bookReq.serviceType, bookReq.highPriority, user.getTier(),
             bookReq.voucherCode, bookReq.scheduledAt);
 
     BigDecimal amount = calc.estimate();
@@ -74,7 +74,7 @@ public class BookingOrchestrator {
     String providerId = bookReq.preferredProviderId;
 
     if(providerId == null){
-      var match = matching.suggest(bookReq.region,
+      var match = matching.suggestProviders(bookReq.region,
               bookReq.serviceType,
               Map.of("algo","BALANCED"));
 
@@ -86,14 +86,14 @@ public class BookingOrchestrator {
     }
     //var payOld = payments.charge(bookReq.paymentMethod, amount);
     Result pay = factory.paymentGateway().capture(amount, factory.currency(),
-            user.id);
+            user.getId());
     //BookingStatus status =
         //    pay.success()? BookingStatus.CONFIRMED : BookingStatus.FAILED_PAYMENT;
     //NEW: Always start as QUOTED; state machine decides the next status.
     Long id = sequenceService.next("booking");
     var booking = new Booking();
             booking.setNumber(id);/*seq.incrementAndGet()*/
-            booking.userId = user.id;
+            booking.userId = user.getId();
             booking.providerId = providerId;
             booking.serviceType = bookReq.serviceType;
             booking.region = bookReq.region;
@@ -109,7 +109,7 @@ public class BookingOrchestrator {
       booking.setFinalPrice(amount);
       booking.setNotes(pay.code());
 
-      notify.sendBookingConfirmation(user.id, booking.getId(), providerId);
+      notify.sendBookingConfirmation(user.getId(), booking.getId(), providerId);
     } else{
       stateMachine.apply(booking, BookingEvent.PAYMENT_FAILED);
       booking.setNotes(pay.code());

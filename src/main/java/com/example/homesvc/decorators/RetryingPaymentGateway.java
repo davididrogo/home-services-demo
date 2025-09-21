@@ -21,7 +21,7 @@ public class RetryingPaymentGateway implements PaymentGateway {
         this.backoffMs = backoff.toMillis();
     }
     @Override
-    public Result capture(BigDecimal amount, Currency currency, Long userId) {
+    public Result capture(BigDecimal amount, Currency currency, String userId) {
         int attempt = 0;
         while(true){
             attempt++;
