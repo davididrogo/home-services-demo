@@ -6,6 +6,7 @@ import com.example.homesvc.domain.enums.UserTier;
 import com.example.homesvc.domain.mongo.Acc;
 import com.example.homesvc.domain.records.Calc;
 import com.example.homesvc.domain.records.Input;
+import com.example.homesvc.observability.Monitored;
 import com.example.homesvc.patterns.strategy.cor.PriceStep;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -18,6 +19,8 @@ import java.util.List;
 public class PricingService {
   private final RuleEngineService rules;
   private final List<PriceStep> steps;
+
+  @Monitored
   public Calc estimate(Region region,
                        ServiceType type,
                        boolean urgent,
