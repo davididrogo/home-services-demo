@@ -28,22 +28,22 @@ public class BookingController {
             .create(req);
   }
   @GetMapping("/{id}")
-  public Optional<BookingView> get(@PathVariable Long id){
+  public Optional<BookingView> get(@PathVariable String id){
 
     return orchestrator.get(id);
   }
   @PostMapping("/{id}/start")
-  public BookingView start(@PathVariable Long id){
+  public BookingView start(@PathVariable String id){
     return orchestrator.start(id);
   }
 
   @PostMapping("/{id}/complete")
-  public BookingView complete(@PathVariable Long id){
+  public BookingView complete(@PathVariable String id){
     return orchestrator.complete(id);
   }
 
   @PostMapping("/{id}/cancel")
-  public BookingView cancel(@PathVariable Long id){
+  public BookingView cancel(@PathVariable String id){
     return orchestrator.cancel(id);
   }
 }
