@@ -27,7 +27,7 @@ public class BookingOrchestrator {
   private final ProviderRepo providers;
   private final BookingRepo bookings;
   private final PricingService pricing;
-  private final ProviderMatchingService matching;
+  private final ProviderMatchingService providerMatching;
   private final PaymentService payments;
   private final NotificationService notify;
 //  private final AtomicLong seq = new AtomicLong(1000);
@@ -47,7 +47,7 @@ public class BookingOrchestrator {
             req.voucherCode,
             req.desiredAt);
 
-    var match = matching.suggestProviders(
+    var match = providerMatching.suggestProviders(
             req.region,
             req.serviceType,
             req.extra);
@@ -74,7 +74,7 @@ public class BookingOrchestrator {
     String providerId = bookReq.preferredProviderId;
 
     if(providerId == null){
-      var match = matching.suggestProviders(bookReq.region,
+      var match = providerMatching.suggestProviders(bookReq.region,
               bookReq.serviceType,
               Map.of("algo","BALANCED"));
 

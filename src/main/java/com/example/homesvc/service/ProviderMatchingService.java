@@ -4,6 +4,7 @@ import com.example.homesvc.domain.enums.MatchingAlgo;
 import com.example.homesvc.domain.enums.Region;
 import com.example.homesvc.domain.enums.ServiceType;
 import com.example.homesvc.domain.records.Match;
+import com.example.homesvc.observability.Monitored;
 import com.example.homesvc.patterns.strategy.match.MatchStrategy;
 import com.example.homesvc.repo.ProviderRepo;
 import lombok.RequiredArgsConstructor;
@@ -15,6 +16,8 @@ import java.util.stream.Collectors;
 public class ProviderMatchingService {
   private final ProviderRepo repo;
   private final Map<MatchingAlgo, MatchStrategy> strategies;
+
+  @Monitored
   public Match suggestProviders(Region region, ServiceType type, Map<String,String> extra){
     var candidates = repo.findByRegionAndSkillsContainsAndLicensedTrue(region, type)
             .stream()

@@ -10,7 +10,7 @@ import org.springframework.stereotype.Component;
 @Aspect
 @Component
 public class TimingAspect {
-    @Around("@annotation(Monitored)")
+    @Around("@annotation(com.example.homesvc.observability.Monitored)")
     public Object time(ProceedingJoinPoint pjp, Monitored monitored) throws Throwable {
         long t0 = System.nanoTime();
         try{
