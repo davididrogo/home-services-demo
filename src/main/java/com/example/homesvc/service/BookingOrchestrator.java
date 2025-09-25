@@ -130,7 +130,7 @@ public class BookingOrchestrator {
     v.notes = booking.getNotes();
     return v;
   }
-  public Optional<BookingView> get(Long id){
+  public Optional<BookingView> get(String id){
     return bookings.findById(id)
             .map(b -> {
               var v = new BookingView();
@@ -146,21 +146,21 @@ public class BookingOrchestrator {
       v.notes=b.getNotes();
       return v;});
   }
-  public BookingView start(Long id) {
+  public BookingView start(String id) {
     var b = bookings.findById(id)
             .orElseThrow();
     stateMachine.apply(b, BookingEvent.START_WORK);
     bookings.save(b);
     return toView(b);
   }
-  public BookingView complete(Long id){
+  public BookingView complete(String id){
     var b = bookings.findById(id).orElseThrow();
     stateMachine.apply(b, BookingEvent.COMPLETE_WORK); // IN_PROGRESS -> COMPLETED
     bookings.save(b);
     return toView(b);
   }
 
-  public BookingView cancel(Long id){
+  public BookingView cancel(String id){
     var b = bookings.findById(id).orElseThrow();
     stateMachine.apply(b, BookingEvent.CANCEL); // Many states -> CANCELLED (if allowed)
     bookings.save(b);
