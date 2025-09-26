@@ -62,22 +62,16 @@ public class BookingOrchestrator {
             LocalDateTime.now());
   }
   public BookingView create(CreateBookingRequest bookReq){
-
     var user = users.findById(bookReq.userId).orElseThrow();
-
     var calc = pricing
             .estimate(bookReq.region, bookReq.serviceType, bookReq.highPriority, user.getTier(),
             bookReq.voucherCode, bookReq.scheduledAt);
-
     BigDecimal amount = calc.estimate();
-
     String providerId = bookReq.preferredProviderId;
-
     if(providerId == null){
       var match = providerMatching.suggestProviders(bookReq.region,
               bookReq.serviceType,
               Map.of("algo","BALANCED"));
-
       providerId = match.providerIds().isEmpty() ? null : match.providerIds().get(0);
     }
     if (providerId == null){
@@ -108,29 +102,26 @@ public class BookingOrchestrator {
       stateMachine.apply(booking, BookingEvent.PAYMENT_AUTHORIZED);// confirmed
       booking.setFinalPrice(amount);
       booking.setNotes(pay.code());
-
-      notify.sendBookingConfirmation(user.getId(), booking.getId(), providerId);
     } else{
       stateMachine.apply(booking, BookingEvent.PAYMENT_FAILED);
       booking.setNotes(pay.code());
     }
-
     bookings.save(booking);
-
+    notify.sendBookingConfirmation(user.getId(), booking.getId(), providerId);
     var v = new BookingView();
-    v.id = booking.getNumber();
-    v.userId = booking.getUserId();
-    v.providerId = booking.getProviderId();
-    v.serviceType = booking.getServiceType();
-    v.region = booking.getRegion();
-    v.scheduledAt = booking.getScheduledAt();
-    v.status = booking.getStatus();
-    v.quotedPrice = booking.getQuotedPrice();
-    v.finalPrice = booking.getFinalPrice();
-    v.notes = booking.getNotes();
+    v.setId(booking.getNumber());
+    v.setUserId(booking.getUserId());
+    v.setProviderId(booking.getProviderId());
+    v.setServiceType(booking.getServiceType());
+    v.setRegion(booking.getRegion());
+    v.setScheduledAt(booking.getScheduledAt());
+    v.setStatus(booking.getStatus());
+    v.setQuotedPrice(booking.getQuotedPrice());
+    v.setFinalPrice(booking.getFinalPrice());
+    v.setNotes(booking.getNotes());
     return v;
   }
-  public Optional<BookingView> get(String id){
+  /*public Optional<BookingView> get(String id){
     return bookings.findById(id)
             .map(b -> {
               var v = new BookingView();
@@ -145,7 +136,7 @@ public class BookingOrchestrator {
       v.finalPrice=b.getFinalPrice();
       v.notes=b.getNotes();
       return v;});
-  }
+  }*/
   public BookingView start(String id) {
     var b = bookings.findById(id)
             .orElseThrow();
@@ -168,12 +159,16 @@ public class BookingOrchestrator {
   }
   private BookingView toView(Booking b){
     var v = new BookingView();
-    v.id = b.getNumber();
-    v.userId = b.getUserId();
-    v.providerId = b.getProviderId();
-    v.serviceType = b.getServiceType(); v.region = b.getRegion();
-    v.scheduledAt = b.getScheduledAt(); v.status = b.getStatus();
-    v.quotedPrice = b.getQuotedPrice(); v.finalPrice = b.getFinalPrice(); v.notes = b.getNotes();
+    v.setId(b.getNumber());
+    v.setUserId(b.getUserId());
+    v.setProviderId(b.getProviderId());
+    v.setServiceType(b.getServiceType());
+    v.setRegion(b.getRegion());
+    v.setScheduledAt(b.getScheduledAt());
+    v.setStatus(b.getStatus());
+    v.setQuotedPrice(b.getQuotedPrice());
+    v.setFinalPrice(b.getFinalPrice());
+    v.setNotes(b.getNotes());
     return v;
   }
 
